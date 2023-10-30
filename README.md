@@ -2,9 +2,9 @@
 
 pyuscope community contributions. It's a bit chaotic, don't look under the hood, but someone still loves it
 
-The barrier to commit the main pyuscope repo is a bit higher due to a combination of things:
-* Anything in the main repo 
-* The main repo requires a CLA. Some people and organizations may not be able to do this
+**NOTE: Labsmore does not offer any support/warranty on this repo! It is provided "as is"**
+
+There is some level of barrier / friction to commit to the main pyuscope repo due to maintenance / testing burden along with licensing requirements. If you think of the main pyuscope repo like a "kernel" this repo is closer to "userspace" where most users should be playing with contributions.
 
 | Item | pyuscope | pyuscope-kitchen |
 | --- | --- | ----------- |
