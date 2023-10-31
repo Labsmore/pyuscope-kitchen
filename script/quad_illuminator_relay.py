@@ -56,37 +56,17 @@ class Plugin(ArgusScriptingPlugin):
     def run_test(self):
         quad = QuadRelayIlluminator()
 
-        vals = self.get_input()
-        button = vals.get("button")
-        if button:
-            if button["value"] == "cycle":
-                while True:
-                    for mode in ("all", "n", "ne", "e", "se", "s", "sw", "w",
-                                 "nw"):
-                        quad.mode(mode)
-                        self.sleep(0.5)
-            else:
-                quad.mode(button["value"])
-
-        if 0:
-            self.log("Cycling relays")
-
-            quad.lr()
-            dir_out = "relay_demo"
-            if not os.path.exists(dir_out):
-                os.mkdir(dir_out)
-
-            try:
-                quad.mode("all")
-                self.sleep(1)
-                for mode in ("all", "up", "right", "down", "left", "ul", "ur",
-                             "lr", "ll"):
-                    self.log(f"On: {mode}")
-                    quad.mode(mode)
-                    # Give auto-exposure some time
-                    self.sleep(0.4)
-                    im = self.image()
-                    im.save(os.path.join(dir_out, f"{mode}.jpg"), quality=90)
-                quad.mode("ll")
-            finally:
-                quad.close()
+        try:
+            vals = self.get_input()
+            button = vals.get("button")
+            if button:
+                if button["value"] == "cycle":
+                    while True:
+                        for mode in ("all", "n", "ne", "e", "se", "s", "sw",
+                                     "w", "nw"):
+                            quad.mode(mode)
+                            self.sleep(0.5)
+                else:
+                    quad.mode(button["value"])
+        finally:
+            quad.close()
