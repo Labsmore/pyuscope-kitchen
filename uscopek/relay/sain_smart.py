@@ -20,6 +20,7 @@ from pylibftdi import BitBangDevice
 
 class SSRelay8CH:
     def __init__(self):
+        self.bb = None
         self.bb = BitBangDevice(
             port=
             "/dev/serial/by-id/usb-FTDI_FT245R_USB_FIFO_AB0NXIZM-if00-port0")
@@ -30,7 +31,8 @@ class SSRelay8CH:
         self.close()
 
     def close(self):
-        self.bb.close()
+        if self.bb:
+            self.bb.close()
 
     def on(self, relay):
         assert 0 <= relay <= 7
