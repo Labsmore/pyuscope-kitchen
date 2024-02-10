@@ -9,7 +9,6 @@ There is some level of barrier / friction to commit to the main pyuscope repo du
 | Item | pyuscope | pyuscope-kitchen |
 | --- | --- | ----------- |
 | License | BSD | BSD (or more?) |
-| Contributing | CLA + pull request | Pull request |
 | Maintainer / testing | Labsmore | None / contribution author |
 | Dependencies | Limited | Whatever you want |
 
