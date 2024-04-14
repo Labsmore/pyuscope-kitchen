@@ -10,9 +10,8 @@ saw this but its GPL
 https://github.com/darrylb123/usbrelay
 """
 
-from uscope.app.argus.scripting import ArgusScriptingPlugin
+from uscope.gui.scripting import ArgusScriptingPlugin
 from uscopek.illuminator.relay_illuminator import QuadRelayIlluminator
-import os
 
 
 class Plugin(ArgusScriptingPlugin):
