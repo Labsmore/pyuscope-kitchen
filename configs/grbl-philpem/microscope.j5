@@ -1,0 +1,110 @@
+/*
+A minimal configuration to demonstrate Picam2 with a HQ Camera and GRBL motion control
+*/
+{
+    "motion": {
+        "hal": "grbl-ser",
+        "grbl": {
+            "port": "/dev/ttyUSB0",
+        },
+        "backlash": {
+            // X has a square coupler with lots of lovely backlash
+            // raw: 0.045
+            "x": 1.290,
+            
+            // Y has a spline coupler with less backlash
+            // raw: 0.024
+            "y": 0.050,
+
+            // Z is direct drive with almost no backlash
+            // raw: 0.005
+            "z": 0.025,
+        },
+        /* 
+         * from config.py:
+         *   +1: move negative along axis then positive to final position
+         *   0 => none
+         *   -1: move positive along axis then negative to final position
+         */
+        "backlash_compensation": 1,
+    },
+    "imager": {
+        "source":"picam2src",
+
+        // Raspberry Pi High Quality Camera, Sony IMX477 sensor, 4056x3040 native resolution
+        "width": 4056,
+        "height": 3040,
+
+        // The NFK 2.5x + 0.3x relay combination gives an image circle
+        // of 16mm (suitable for C-mount).
+        //   7.86 mm sensor diagonal / 16 mm circle = 49.1% linear coverage
+        //                                  0.491^2 = 24.1% by area
+        //
+        // To put it another way, the camera field of view is about half
+        // (diagonally) the viewfinder's FOV. Conveniently, for most microscope
+        // objectives, that's the image portion which gives the best quality.
+        //
+        // We also need to factor in NA limits and not go below Nyquist; we
+        // can work that out via the Abbe criterion (d=(0.61 * lambda) / NA).
+        //
+        // Best and worst, 0.2NA to 1.45NA gives about 7 to 14x oversampling.
+        // By Nyquist we want at least 2 pixels per feature.
+        //
+        // So scale down by 2x as we're not getting any useful info from
+        // those pixels, and the downscale might even get rid of artefacts
+        // from the sensor's Bayer pattern.
+        //
+        // See https://github.com/Labsmore/pyuscope/issues/475 for the full
+        // workings-out.
+
+        // Scalar is how much we scale the image before saving to disk
+        "scalar": 0.50,
+    },
+    "optics": {
+        // There is an Olympus U-PMTVC 0.33x C-mount adapter between the
+        // camera and the projection eyepiece.
+        // The eyepiece is an NFK 2.5x LD.
+        //
+        // The Sony IMX477 on the Pi HQ camera has an active area of:
+        //   1.55um * 4056 = 6.2868 mm (X)
+        //   1.55um * 3040 = 4.7182 mm (Y)
+        //   = ~7.86 mm diagonal
+        //
+        // Discounting the objective, this is:
+        //   2.5x * 0.33x = 0.825x optical magnification
+        //   1.55 um / 0.825 = ~1.8788 um per pixel (theoretically)
+        //
+        // See https://github.com/Labsmore/pyuscope/issues/475 for the full
+        // workings-out.
+
+        "um_per_pixel_raw_1x": 1.8788,
+    },
+    "systems": [
+        //Default configuration
+        {
+            "camera_sn": null,
+            "objectives_db": [
+                // Neo objectives only work on a BH2 with the UMA lightbox.
+                //"vendor: Olympus, model: NeoDPlan 5X",
+                //"vendor: Olympus, model: NeoDPlan 10X",
+                //"vendor: Olympus, model: NeoSPlan 20X",
+                //"vendor: Olympus, model: NeoDPlan 50X",
+                //"vendor: Olympus, model: NeoSPlan 10X",
+
+                // These work brightfield-only with the UMA and the basic brightfield lightbox
+                // - MDPlan5x is not compatible with Nomarski prisms, disable so it's not accidentally selected
+                //"vendor: Olympus, model: MDPlan 5X",
+                "vendor: Olympus, model: MSPlan 5X",
+                "vendor: Olympus, model: MSPlan 10X",
+                "vendor: Olympus, model: MSPlan 20X",
+                "vendor: Olympus, model: MSPlan 50X",
+                "vendor: Olympus, model: MSPlan 100X",
+                // UIS2 gives better image quality
+                //"vendor: Olympus, model: Plan 100X Oil",
+                "vendor: Olympus, model: PlanCN 100X Oil UIS2",
+                // ULWD is last because it's not commonly used for imaging chips
+                "vendor: Olympus, model: ULWD MSPlan 50X",
+            ],
+        },
+    ],
+}
